@@ -218,14 +218,6 @@ struct ContentView: View {
     }
 }
 
-@main
-struct ProfileCardApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
-    }
-}
 ```
 
 ---
@@ -237,4 +229,5 @@ struct ProfileCardApp: App {
 3. **HStack:** Positions buttons side by side.  
 4. **Modifiers:** Enhance views with styling (e.g., padding, font, color).  
 5. **Reusable Patterns:** Combining stacks and modifiers makes UI design intuitive and efficient.  
+
 
