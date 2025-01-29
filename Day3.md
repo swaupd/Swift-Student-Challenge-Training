@@ -1,23 +1,16 @@
 # **Step-by-Step Guide to Creating a macOS Calculator UI in SwiftUI**  
 
-1. **Set up the base structure** (containers for layout).  
-2. **Define the `CalcButton` struct** (to style buttons).  
-3. **Add calculator buttons using `VStack` and `HStack`**.  
-4. **Create the display section for showing calculations**.  
-
----
-
 ## **Step 1: Setting Up the Base Structure**  
 1. Open Xcode and create a **new macOS SwiftUI project**.  
 2. Open `ContentView.swift`.  
-3. Define the main `ZStack` and `VStack` for structuring the UI.  
+3. Define the `ZStack` as the background container.  
 
 ```swift
 import SwiftUI
 
 struct ContentView: View {
     @State private var displayValue = "0"
-
+    
     var body: some View {
         ZStack {
             Color.black.opacity(0.2)
@@ -27,18 +20,23 @@ struct ContentView: View {
                 
             }
         }
+        .background(.ultraThinMaterial)
     }
 }
 ```
+
 ### **Breakdown:**  
-- `ZStack`: **Background layer** for overall styling.  
-- `Color.black.opacity(0.2)`: **Dark semi-transparent background** for contrast.  
-- `VStack()`: **Holds all UI elements vertically** (calculator screen + buttons).  
+- `ZStack`: Layers the background and UI elements.  
+- `Color.black.opacity(0.2)`: A dark background with slight transparency.  
+- `.ignoresSafeArea()`: Ensures the background extends to all edges.  
+- `.background(.ultraThinMaterial)`: Provides a **blurred material effect**.  
 
 ---
 
 ## **Step 2: Creating the `CalcButton` Struct**  
-Before adding calculator buttons, **define a custom button style** for uniformity.
+Now, create the **button style** to ensure consistent button sizes and rounded edges.
+
+### **Define a Custom Button Style**  
 
 ```swift
 struct CalcButton: ButtonStyle {
@@ -56,40 +54,40 @@ struct CalcButton: ButtonStyle {
     }
 }
 ```
+
 ### **Breakdown:**  
-- `ButtonStyle`: **Creates a consistent style** for calculator buttons.  
-- `color`: **Sets button color** (gray for function buttons, orange for operators).  
-- `isWide`: **Handles the larger "0" button** by adjusting width.  
-- `.font(.title)`: **Applies uniform text styling**.  
-- `.background(color)`: **Defines button background color**.  
-- `.clipShape(RoundedRectangle(cornerRadius: 30))`: **Rounds button edges**.  
-- `.scaleEffect(configuration.isPressed ? 0.9 : 1)`: **Shrinks button slightly when pressed** for visual feedback.
+- **`ButtonStyle`**: Defines a **custom look** for buttons.  
+- `.font(.title)`: Ensures text is large enough to be visible.  
+- `.frame(minWidth: 130, minHeight: 60)`: 
+  - **Standard buttons**: `60x60`  
+  - **Wide buttons (like 0)**: `130x60`  
+- `.background(color)`: Colors the button dynamically.  
+- `.clipShape(RoundedRectangle(cornerRadius: 30))`: Rounds button edges.  
+- `.scaleEffect(configuration.isPressed ? 0.9 : 1)`: Slightly shrinks buttons when clicked.
 
 ---
 
-## **Step 3: Adding the Display Section**  
-Now, add the **calculator display** inside `VStack`.
+## **Step 3: Adding the Display Area**  
+### **Insert the Calculator Display**  
+Modify the `VStack` to include the **display section at the top**.
 
 ```swift
-HStack {
-    Spacer()
+VStack {
     Text(displayValue)
         .font(.largeTitle)
         .foregroundColor(.white)
 }
-.padding()
 ```
+
 ### **Breakdown:**  
-- `HStack`: **Aligns the text to the right** like a calculator screen.  
-- `Spacer()`: **Pushes the text towards the right side**.  
-- `Text(displayValue)`: **Displays the current calculation input/output**.  
-- `.font(.largeTitle)`: **Sets text size** for readability.  
-- `.foregroundColor(.white)`: **White text for contrast**.  
+- `Text(displayValue)`: Displays the current input or result.  
+- `.font(.largeTitle)`: Increases text size for better visibility.  
+- `.foregroundColor(.white)`: Ensures readability on a dark background.  
 
 ---
 
-## **Step 4: Creating Calculator Buttons**  
-Now, add the **button rows inside `VStack`** using `HStack` for proper alignment.
+## **Step 4: Adding the Calculator Buttons**  
+### **Structure the Buttons Using `VStack` and `HStack`**  
 
 ```swift
 VStack(spacing: 10) {
@@ -122,48 +120,44 @@ VStack(spacing: 10) {
     }
 
     HStack(spacing: 10) {
-        Button("0") { }
-            .buttonStyle(CalcButton(color: .secondary, isWide: true))
+        Button("0") { }.buttonStyle(CalcButton(color: .secondary, isWide: true))
         Button(".") { }.buttonStyle(CalcButton(color: .secondary))
         Button("=") { }.buttonStyle(CalcButton(color: .orange))
     }
 }
 .padding()
 ```
+
 ### **Breakdown:**  
-- `VStack(spacing: 10)`: **Organizes buttons into rows**.  
-- `HStack(spacing: 10)`: **Aligns buttons horizontally** within each row.  
-- `Button(action:)`: **Defines the button’s behavior** (functionality can be added later).  
-- `.buttonStyle(CalcButton(color: .gray))`: **Applies the custom `CalcButton` style**.  
-- **Row Arrangement:**
-  - **Row 1:** `"AC"`, `"±"`, `"%"`, `"÷"`
-  - **Row 2:** `"7"`, `"8"`, `"9"`, `"×"`
-  - **Row 3:** `"4"`, `"5"`, `"6"`, `"-"`
-  - **Row 4:** `"1"`, `"2"`, `"3"`, `"+"`
-  - **Row 5:** `"0"` (wide button), `"."`, `"="`
+- **Rows Organized in `HStack`s:**  
+  - **First row**: `"AC"`, `"+/-"`, `"%"`, `"÷"`  
+  - **Second row**: `"7"`, `"8"`, `"9"`, `"×"`  
+  - **Third row**: `"4"`, `"5"`, `"6"`, `"-"`  
+  - **Fourth row**: `"1"`, `"2"`, `"3"`, `"+"`  
+  - **Fifth row**: `"0"` (wide button), `"."`, `"="`  
+- **Each button is styled using `CalcButton`** to ensure consistent design.  
+- **Spacing ensures an aligned, structured layout.**  
 
 ---
 
-## **Step 5: Finalizing the Layout**  
-Now, insert everything into the `VStack` inside `ZStack`:
+## **Step 5: Putting Everything Together**  
 
+### **Final Code**
 ```swift
+import SwiftUI
+
 struct ContentView: View {
     @State private var displayValue = "0"
-
+    
     var body: some View {
         ZStack {
             Color.black.opacity(0.2)
                 .ignoresSafeArea()
             
-            VStack() {
-                HStack {
-                    Spacer()
-                    Text(displayValue)
-                        .font(.largeTitle)
-                        .foregroundColor(.white)
-                }
-                .padding()
+            VStack {
+                Text(displayValue)
+                    .font(.largeTitle)
+                    .foregroundColor(.white)
                 
                 VStack(spacing: 10) {
                     HStack(spacing: 10) {
@@ -186,7 +180,14 @@ struct ContentView: View {
                         Button("6") { }.buttonStyle(CalcButton(color: .secondary))
                         Button("-") { }.buttonStyle(CalcButton(color: .orange))
                     }
-
+                    
+                    HStack(spacing: 10) {
+                        Button("1") { }.buttonStyle(CalcButton(color: .secondary))
+                        Button("2") { }.buttonStyle(CalcButton(color: .secondary))
+                        Button("3") { }.buttonStyle(CalcButton(color: .secondary))
+                        Button("+") { }.buttonStyle(CalcButton(color: .orange))
+                    }
+                    
                     HStack(spacing: 10) {
                         Button("0") { }.buttonStyle(CalcButton(color: .secondary, isWide: true))
                         Button(".") { }.buttonStyle(CalcButton(color: .secondary))
@@ -196,6 +197,7 @@ struct ContentView: View {
                 .padding()
             }
         }
+        .background(.ultraThinMaterial)
     }
 }
 
