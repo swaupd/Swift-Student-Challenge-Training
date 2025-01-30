@@ -173,7 +173,60 @@ struct ContentView: View {
             }
         }
     }
+    func appendCharacter(_ char: String) {
+        if expression == "0" {
+            expression = char
+        } else {
+            expression += char
+        }
+    }
+    func appendOperator(_ op: String) {
+        guard let lastChar = expression.last, !"+-×÷.".contains(lastChar) else { return }
+        expression += op
+    }
+    func appendDecimal() {
+        let components = expression.split(whereSeparator: { "+-×÷".contains($0) })
+        if let lastComponent = components.last, !lastComponent.contains(".") {
+            expression += "."
+        }
+    }
+    func evaluateExpression() {
+        let formattedExpression = expression
+            .replacingOccurrences(of: "×", with: "*")
+            .replacingOccurrences(of: "÷", with: "/")
+        
+        let expressionNS = NSExpression(format: formattedExpression)
+        if let result = expressionNS.expressionValue(with: nil, context: nil) as? NSNumber {
+            expression = formatResult(result.doubleValue)
+        }
+    }    
+    
+    func formatResult(_ result: Double) -> String {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 4
+        return formatter.string(from: NSNumber(value: result)) ?? "\(result)"
+    }
+    
+    func backspace() {
+        expression = expression.count > 1 ? String(expression.dropLast()) : "0"
+    }
 }
+
+struct CalcButton: ButtonStyle {
+    let color: Color
+    var isWide: Bool = false
+    
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.title)
+            .frame(minWidth: isWide ? 130 : 60, minHeight: 60)
+            .background(color)
+            .clipShape(RoundedRectangle(cornerRadius: 30))
+            .scaleEffect(configuration.isPressed ? 0.9 : 1)
+    }
+}
+
 ```
 
 ---
