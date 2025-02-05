@@ -1,4 +1,4 @@
-# **Complete Documentation: Implementing Login, Registration, and User Management with SwiftData**  
+# **Implementing Login, Registration, and User Management with SwiftData**  
 
 This guide provides step-by-step instructions for integrating **SwiftData** into an existing SwiftUI app, covering:  
 1. **Modifying `MyApp.swift` to enable SwiftData**  
