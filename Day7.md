@@ -366,7 +366,7 @@ struct HomeView: View {
     
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var modelContext
-    @Query var users: [User] = []
+    @Query var users: [User]
     @State private var email = ""
     @State var errorText = ""
 
